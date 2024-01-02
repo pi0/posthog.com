@@ -11,9 +11,14 @@ To do this, add the following `routeRules` to your `nuxt.config.ts` file:
 ```js
 // nuxt.config.ts
 export default defineNuxtConfig({
-    routeRules: {
-        '/ingest/**': { proxy: 'https://app.posthog.com/**' },
+  routeRules: {
+    '/ingest/**': {
+      proxy: {
+        to: 'https://app.posthog.com/**',
+        fetchOptions: { credentials: 'omit' }
+      }
     },
+  },
 });
 ```
 
@@ -21,7 +26,7 @@ Then configure the PostHog client to send requests via your new proxy:
 
 ```js
 const posthogClient = posthog.init(runtimeConfig.public.posthogPublicKey, {
-    api_host: 'https://your-host.com/ingest',
+    api_host: '/ingest',
     ui_host: 'https://app.posthog.com', // or https://eu.posthog.com if your PostHog is hosted in Europe
 });
 ```
